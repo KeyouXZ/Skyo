@@ -31,7 +31,7 @@ const client = new Client({
 
 require("dotenv").config();
 const fs = require("fs");
-const config = require("./utils/config");
+const config = require("../utils/config");
 
 client.commands = new Collection();
 client.aliases = new Collection();
@@ -43,7 +43,7 @@ module.exports = client;
 
 // Handler
 fs.readdirSync("./src/handlers/").forEach((handler) => {
-    require(`./src/handlers/${handler}`)(client);
+    require(`./handlers/${handler}`)(client);
 });
 
 // Enter bots
@@ -51,24 +51,24 @@ client.login(process.env.TOKEN);
 
 // Terminal command
 
-const { readline } = require("./utils/bot");
+const { readline } = require("../utils/bot");
 readline.create(client);
 
 // Error log
-const { WebhookClient } = require("discord.js");
+/*const { WebhookClient } = require("discord.js");
 
 const webhook = new WebhookClient({
     url: process.env.WEBHOOK_URL,
-});
+});*/
 
 process.on("unhandledRejection", (reason, p) => {
     console.log(`[Main/ERROR]: Unhandled Rejection/Catch`);
     console.log(reason, p);
-    webhook.send(`[Main/ERROR]: Unhandled Rejection/Catch\n${reason}\n${p}`);
+    //webhook.send(`[Main/ERROR]: Unhandled Rejection/Catch\n${reason}\n${p}`);
 });
 
 process.on("uncaughtException", (err, origin) => {
     console.log(`[Main/ERROR]: Uncaught Exception/Catch`);
     console.log(err, origin);
-    webhook.send(`[Main/ERROR]: Uncaught Exception/Catch\n${err}\n${origin}`);
+   // webhook.send(`[Main/ERROR]: Uncaught Exception/Catch\n${err}\n${origin}`);
 });
