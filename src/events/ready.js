@@ -1,9 +1,9 @@
 const { ActivityType } = require('discord.js');
-const client = require('../../index');
+const client = require('../index');
 const chalk = require("chalk");
 
 client.on("ready", () => {
-  const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
+    const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
 	const activities = [
 		{ name: `${client.guilds.cache.size} Servers`, type: ActivityType.Listening },
 		{ name: `${client.channels.cache.size} Channels`, type: ActivityType.Playing },
@@ -25,5 +25,5 @@ client.on("ready", () => {
 		client.user.setStatus(status[s]);
 		s++;
 	}, 30000);
-  console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connected to`, chalk.yellow(client.user.tag));
+    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connected to`, chalk.yellow(client.user.tag));
 });

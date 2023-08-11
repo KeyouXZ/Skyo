@@ -1,32 +1,32 @@
 const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js");
 const client = new Client({
-  restRequestTimeout: 60000,
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildBans,
-    GatewayIntentBits.GuildEmojisAndStickers,
-    GatewayIntentBits.GuildIntegrations,
-    GatewayIntentBits.GuildWebhooks,
-    GatewayIntentBits.GuildInvites,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.GuildMessageTyping,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.DirectMessageReactions,
-    GatewayIntentBits.DirectMessageTyping,
-    GatewayIntentBits.GuildScheduledEvents,
-    GatewayIntentBits.MessageContent,
-  ],
-  partials: [
-    Partials.Channel,
-    Partials.Message,
-    Partials.User,
-    Partials.GuildMember,
-    Partials.Reaction,
-    Partials.GuildScheduledEvents,
-  ],
+    restRequestTimeout: 60000,
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildBans,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildIntegrations,
+        GatewayIntentBits.GuildWebhooks,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMessageTyping,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.DirectMessageReactions,
+        GatewayIntentBits.DirectMessageTyping,
+        GatewayIntentBits.GuildScheduledEvents,
+        GatewayIntentBits.MessageContent,
+    ],
+    partials: [
+        Partials.Channel,
+        Partials.Message,
+        Partials.User,
+        Partials.GuildMember,
+        Partials.Reaction,
+        Partials.GuildScheduledEvents,
+    ],
 });
 
 require("dotenv").config();
@@ -43,7 +43,7 @@ module.exports = client;
 
 // Handler
 fs.readdirSync("./src/handlers/").forEach((handler) => {
-  require(`./src/handlers/${handler}`)(client);
+    require(`./src/handlers/${handler}`)(client);
 });
 
 // Enter bots
@@ -58,17 +58,17 @@ readline.create(client);
 const { WebhookClient } = require("discord.js");
 
 const webhook = new WebhookClient({
-  url: process.env.WEBHOOK_URL,
+    url: process.env.WEBHOOK_URL,
 });
 
 process.on("unhandledRejection", (reason, p) => {
-  console.log(`[Main/ERROR]: Unhandled Rejection/Catch`);
-  console.log(reason, p);
-  webhook.send(`[Main/ERROR]: Unhandled Rejection/Catch\n${reason}\n${p}`);
+    console.log(`[Main/ERROR]: Unhandled Rejection/Catch`);
+    console.log(reason, p);
+    webhook.send(`[Main/ERROR]: Unhandled Rejection/Catch\n${reason}\n${p}`);
 });
 
 process.on("uncaughtException", (err, origin) => {
-  console.log(`[Main/ERROR]: Uncaught Exception/Catch`);
-  console.log(err, origin);
-  webhook.send(`[Main/ERROR]: Uncaught Exception/Catch\n${err}\n${origin}`);
+    console.log(`[Main/ERROR]: Uncaught Exception/Catch`);
+    console.log(err, origin);
+    webhook.send(`[Main/ERROR]: Uncaught Exception/Catch\n${err}\n${origin}`);
 });
