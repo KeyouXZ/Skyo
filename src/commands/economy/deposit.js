@@ -73,7 +73,7 @@ module.exports = {
         data.wallet -= amount;
         data.bank += amount;
 
-        database.run('UPDATE users SET wallet = ?, bank = ? WHERE id = ?', [data.wallet, data.bank, message.author.id]);
+        await database.save(userID, data);
 
         const embed0 = new EmbedBuilder()
             .setColor('Green')
