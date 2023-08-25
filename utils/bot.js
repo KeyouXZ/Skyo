@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const userSchema = require("../database/usersSchema");
-const globalsSchema = require("../database/globalsSchema");
+const globalSchema = require("../database/globalsSchema");
 const timestamp = new Date().toLocaleString("en-US", { hour12: false }).replace(",", "");
 
 const database = {
@@ -25,7 +25,7 @@ const database = {
     getGlobalAll: async function() {
         return await globalSchema.find(); 
     },
-}
+};
 
 const cooldown = {
     set: async function (cooldowns, userId, cooldownSeconds) {
