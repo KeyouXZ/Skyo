@@ -13,7 +13,7 @@ const serverSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    goodbyeMsg: {
+    goodbyeMessage: {
         type: String,
         default: ""
     },
