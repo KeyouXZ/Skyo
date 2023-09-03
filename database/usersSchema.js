@@ -47,4 +47,6 @@ const userSchema = new mongoose.Schema({
     lastWeekly: Date
 });
 
-module.export = mongoose.model('Users', userSchema);
+const userSchemaData = mongoose.model("Users", userSchema)
+
+module.exports = userSchemaData; //mongoose.model('Users', userSchema);

@@ -2,10 +2,11 @@ const chalk = require("chalk");
 const mongoose = require("mongoose");
 const userSchema = require("../database/usersSchema");
 const globalSchema = require("../database/globalsSchema");
+const serverSchema = require("../database/serverSchema")
 const timestamp = new Date().toLocaleString("en-US", { hour12: false }).replace(",", "");
 
 const database = {
-    createUsers: async function(userId) {
+    createUser: async function(userId) {
         const user = new userSchema({ userId });
         await user.save();
         return console.log(`New user ${userId} created`);
@@ -17,14 +18,28 @@ const database = {
         return await userSchema.find(); 
     },
     save: async function(userId, update) {
-        await userSchema.updateOne({ userId }, update);
+        return await userSchema.updateOne({ userId }, update);
     },
     /*delete: async function(userId) {
         await userSchema.deleteOne({ userId });
     }*/
+    createServer: async function(serverId) {
+        const server = new serverSchema({ serverId });
+        await server.save();
+        return console.log(`New server ${serverId} created`);
+    },
     getGlobalAll: async function() {
         return await globalSchema.find(); 
     },
+    getServer: async function(serverId) {
+        return await serverSchema.findOne({ serverId });
+    },
+    getServerAll: async function() {
+        return await serverSchema.find();
+    },
+    saveServer: async function(serverId, update) {
+        return await serverSchema.updateOne({ serverId }, update)
+    }
 };
 
 const cooldown = {

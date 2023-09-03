@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const serverSchema = new mongoose.schema({
+const serverSchema = new mongoose.Schema({
     serverId: {
         type: String,
         require: true
     },
-    welcomeMsg: {
+    welcomeMessage: {
         type: String,
         default: ""
     },

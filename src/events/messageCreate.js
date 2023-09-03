@@ -8,6 +8,7 @@ const moment = require('moment');
 const chalk = require('chalk');
 const mPrefix = process.env.CPREFIX;
 const { database } = require('../../utils/bot');
+const { createServer } = require('http');
 
 const prefixes = client.prefix;
 const cooldown = new Collection();
@@ -53,7 +54,9 @@ client.on('messageCreate', async (message) => {
     if (!command) command = client.commands.get(client.aliases.get(cmd));
   
     if (!command?.run) return;
-  
+    
+    const serverData = await database.getServer(message.member.guild.id)
+    if (!serverData) await database.createServer(message.member.guild.id)
     const firstData = await database.get(message.author.id);
   
     if (!firstData) {
@@ -64,7 +67,7 @@ client.on('messageCreate', async (message) => {
     if (targetMember && !targetMember.user.bot) {
         const targetData = await database.get(message.mentions.members.first().user.id);
         if (!targetData) {
-            await createUser(message.mentions.members.first().user.id);
+            await database.createUser(message.mentions.members.first().user.id);
         }
     }
     

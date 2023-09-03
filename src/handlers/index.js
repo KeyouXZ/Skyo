@@ -7,7 +7,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const rest = new REST({ version: '9' }).setToken(TOKEN);
 // Required by MongoDB
 const mongoose = require("mongoose");
-const url = process.env.MONGO;
+const url = process.env.MONGO_URL;
 
 module.exports = async (client) => {
     // Load events
@@ -90,26 +90,18 @@ module.exports = async (client) => {
     */
     
     // Load MongoDB
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Loading mongodb...`);
     mongoose.set('strictQuery', false);
     try {
-        console.log(chalk.blue(chalk.bold(`Database`)), (chalk.white(`>>`)), chalk.red(`MongoDB`), chalk.green(`is connecting...`));
         console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connecting to mongodb...`);
         await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
+        })
+        .then(c => {
+             console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connected to MongoDB`)
         });
     } catch (err) {
         console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Failed to connect to MongoDB: ${err.msg} ${err.stack}`));
         process.exit(1);
     }
-
-    mongoose.connection.once("open", () => {
-        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connected to MongoDB`);
-    });
-
-    mongoose.connection.on("error", (err) => {
-        console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Failed to connect to MongoDB: ${err.msg} ${err.stack}`));
-        process.exit(1);
-    });
-};
+}
