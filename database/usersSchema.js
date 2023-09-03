@@ -2,46 +2,46 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     userId: {
-      type: String,
-      required: true
+        type: String,
+        required: true
     },
     createdAt: {
-      type: Date,
-       default: Date.now
+        type: Date,
+        default: Date.now
     }, 
     blacklist: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     },
     isPremium: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
      },
     isDeveloper: {
-      type: Boolean,
-      default: false    
+        type: Boolean,
+        default: false    
     },
     premiumDate: {
-      type: Date
+        type: Date
     },
     premiumDuration: {
-      type: Number
+        type: Number
     },
     xp: {
-      type: Number,
-      default: 0
+        type: Number,
+        default: 0
     },
     level: {
-      type: Number,
-      default: 1
+        type: Number,
+        default: 1
     },
     wallet: {
-      type: Number,
-      default: 100
+        type: Number,
+        default: 100
     },
     bank: {
-      type: Number,
-      default: 0
+        type: Number,
+        default: 0
     },
     lastDaily: Date,
     lastWeekly: Date
