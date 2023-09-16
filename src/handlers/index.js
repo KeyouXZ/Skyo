@@ -92,7 +92,7 @@ module.exports = async (client) => {
     // Load MongoDB
     mongoose.set('strictQuery', false);
     try {
-        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connecting to mongodb...`);
+        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connecting to MongoDB...`);
         await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,

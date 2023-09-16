@@ -6,11 +6,8 @@ const { database } = require("../../utils/bot")
 client.on("guildMemberRemove", async (member) => {
 	const serverID = member.guild.id;
 	const goodbyeData = database.getServer(serverID)
-	if (!goodbyeData) return;
-	if (
-		goodbyeData.goodbyeChannel === "" ||
-		goodbyeData.goodbyeMessage === ""
-	) return;
+	if (!goodbyeData) { return };
+	if (goodbyeData.goodbyeChannel === "" || goodbyeData.goodbyeMessage === "") { return };
 
 	const goodbyeChannel = goodbyeData.goodbyeChannel;
 	const goodbyeMessage = goodbyeData.goodbyeMessage;
