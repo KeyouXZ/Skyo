@@ -30,3 +30,4 @@ client.on("guildMemberRemove", async (member) => {
 		.replace("{member(count)}", userCount);
 	channel.send(replacedMessage);
 });
+//

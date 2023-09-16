@@ -28,3 +28,4 @@ client.on("guildMemberAdd", async (member) => {
 		.replace("{member(count)}", userCount);
 	channel.send(replacedMessage);
 });
+// TMP
