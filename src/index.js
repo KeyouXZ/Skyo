@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Partials, Collection, EmbedBuilder } = require("discord.js");
 const client = new Client({
     restRequestTimeout: 60000,
     intents: [
@@ -32,6 +32,7 @@ const client = new Client({
 require("dotenv").config();
 const fs = require("fs");
 const config = require("../utils/config");
+const chalk = require("chalk")
 
 client.commands = new Collection();
 client.aliases = new Collection();
@@ -55,20 +56,48 @@ const { readline } = require("../utils/bot");
 readline.create(client);
 
 // Error log
-/*const { WebhookClient } = require("discord.js");
+if (process.env.WEBHOOK_URL) {
+    const { WebhookClient } = require("discord.js");
 
-const webhook = new WebhookClient({
-    url: process.env.WEBHOOK_URL,
-});*/
+    const webhook = new WebhookClient({
+        url: process.env.WEBHOOK_URL,
+    });
 
+    
+    
+    process.on("unhandledRejection", (reason, p) => {
+        const uR = new EmbedBuilder()
+        .setTitle("Unhandled Rejection")
+        .setColor('Red')
+        .addFields([
+            {
+                name: '🚨 Error 🚨',
+                value: `\`\`\`${reason.stack}\`\`\``
+            }
+        ]);
+        webhook.send(uR)
+    })
+
+    
+    process.on('uncaughtException', (err, origin) => {
+        const uE= new EmbedBuilder()
+        .setTitle("Unhandled Rejection")
+        .setColor('Red')
+        .addFields([
+            {
+                name: '🚨 Error 🚨',
+                value: `\`\`\`${err.stack}\`\`\``
+            }
+        ]);
+        webhook.send(uE)
+    })
+}
+
+const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
 process.on("unhandledRejection", (reason, p) => {
-    console.log(`[Main/ERROR]: Unhandled Rejection/Catch`);
-    console.log(reason, p);
-    //webhook.send(`[Main/ERROR]: Unhandled Rejection/Catch\n${reason}\n${p}`);
+    console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Unhandled Rejection: ${reason.stack}`));
 });
 
 process.on("uncaughtException", (err, origin) => {
-    console.log(`[Main/ERROR]: Uncaught Exception/Catch`);
-    console.log(err, origin);
-   // webhook.send(`[Main/ERROR]: Uncaught Exception/Catch\n${err}\n${origin}`);
+    console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Uncaught Exception: ${err.stack}`));
 });

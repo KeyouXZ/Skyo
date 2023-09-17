@@ -3,7 +3,7 @@ const { database } = require("../../utils/bot");
 
 client.on("guildMemberAdd", async (member) => {
 	const serverID = member.guild.id;
-	const welcomeData = database.getServer(serverID)
+	const welcomeData = await database.getServer(serverID)
 
 	if (!welcomeData) { return };
 	if (welcomeData.welcomeChannel === "" || welcomeData.welcomeMessage === "" ) { return };
