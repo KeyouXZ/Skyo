@@ -63,8 +63,6 @@ if (process.env.WEBHOOK_URL) {
         url: process.env.WEBHOOK_URL,
     });
 
-    
-    
     process.on("unhandledRejection", (reason, p) => {
         const uR = new EmbedBuilder()
         .setTitle("Unhandled Rejection")
@@ -78,7 +76,6 @@ if (process.env.WEBHOOK_URL) {
         webhook.send(uR)
     })
 
-    
     process.on('uncaughtException', (err, origin) => {
         const uE= new EmbedBuilder()
         .setTitle("Unhandled Rejection")

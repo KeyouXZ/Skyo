@@ -35,6 +35,8 @@ module.exports = {
 
     if (target.user.id == message.author.id) {
       return deleteMessage(message.reply('You can\'t give money to yourself'));
+    } else if (target.user.id == message.author.bot) {
+        return deleteMessage(message.reply('You can\'t give money to bot'))
     }
 
     const targetData = await database.get(target.id);
