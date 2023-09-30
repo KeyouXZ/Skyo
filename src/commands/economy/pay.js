@@ -26,7 +26,7 @@ module.exports = {
     const userID = message.author.id;
     // Cooldowns 
     if (cooldown.has(cooldowns, message.author.id, message)) return;
-    const data = await database.get('users', message.author.id);
+    const data = await database.get(userID);
 
     const target = message.mentions.members.first();
     if (!target) {
@@ -37,7 +37,7 @@ module.exports = {
       return deleteMessage(message.reply('You can\'t give money to yourself'));
     }
 
-    const targetData = await database.get('users', target.id);
+    const targetData = await database.get(target.id);
 
     const wallet = data.wallet;
     const tWallet = targetData.wallet;
@@ -109,9 +109,9 @@ module.exports = {
         data.wallet -= amount;
         targetData.wallet += total;
         // Database
-        database.run('UPDATE users SET wallet = ? WHERE id = ?', [data.wallet, message.author.id]);
+        await database.save(message.author.id, data)
         // Database
-        database.run('UPDATE users SET wallet = ? WHERE id = ?', [targetData.wallet, target.id]);
+        await database.save(target.id, targetData)
         try {
           confirm.setDisabled(true);
           cancel.setDisabled(true);

@@ -1,15 +1,16 @@
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const userSchema = require("../database/usersSchema");
-const globalSchema = require("../database/globalsSchema");
+const itemSchema = require("../database/itemSchema");
 const serverSchema = require("../database/serverSchema")
+const userItemSchema = require("../database/userItemSchema.js")
 const timestamp = new Date().toLocaleString("en-US", { hour12: false }).replace(",", "");
 
 const database = {
     createUser: async function(userId) {
         const user = new userSchema({ userId });
         await user.save();
-        return console.log(`New user ${userId} created`);
+        return console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `User with ID ${userId} has been created`);
     },
     get: async function(userId) {
         return await userSchema.findOne({ userId });
@@ -26,9 +27,9 @@ const database = {
     createServer: async function(serverId) {
         const server = new serverSchema({ serverId });
         await server.save();
-        return console.log(`New server ${serverId} created`);
+        return console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Server with ID ${serverId} has been created`);
     },
-    getGlobalAll: async function() {
+    getItemAll: async function() {
         return await globalSchema.find(); 
     },
     getServer: async function(serverId) {
@@ -39,6 +40,12 @@ const database = {
     },
     saveServer: async function(serverId, update) {
         return await serverSchema.updateOne({ serverId }, update)
+    },
+    getUserItem: async function(userID) {
+        return await userItemSchema.findOne({ userID})
+    },
+    saveUserItem: async function(userID, update) {
+        return await userItemSchema.updateOne({ userID }, update)
     }
 };
 

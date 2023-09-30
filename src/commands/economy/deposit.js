@@ -41,7 +41,7 @@ module.exports = {
             data.wallet = 0;
     
             // Database
-            database.save(userID, data);
+            await database.save(userID, data);
 
             const embed = new EmbedBuilder()
             .setColor('Green')

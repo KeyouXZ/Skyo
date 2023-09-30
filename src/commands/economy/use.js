@@ -20,13 +20,13 @@ module.exports = {
   usage: ['<itemId> [amount]', '<itemId> all'],
   run: async (client, message, args) => {
     // Read database
-    const data = await database.get('users', message.author.id);
-    const itemData = await database.getGlobalAll('globalItems');
-    const userItem = await database.get('userItems', message.author.id);
+    const data = await database.get(message.author.id);
+    const itemData = await database.getItemAll();
+    const userItem = await database.getUserItem(message.author.id);
     
     // Cooldowns
     // Cooldowns
-	  if (cooldown.has(cooldowns, message.author.id, message)) return;
+	if (cooldown.has(cooldowns, message.author.id, message)) return;
     
     const userId = message.author.id;
     const user = data;
@@ -40,7 +40,7 @@ module.exports = {
       return deleteMessage(message.reply('Invalid item ID'));
     }
     
-    if (!userItem[args[0]] || userItem[args[0]] < 1) {
+    if (!userItem.item[args[0]] || userItem.item[args[0]] < 1) {
       return deleteMessage(message.reply(`You don't have this item`));
     }
     
@@ -69,9 +69,9 @@ module.exports = {
       user.isPremium = 1;
       user.premiumDate = moment().toISOString();
       user.premiumDuration = premiumDurations[args[0]];
-      const newItem = userItem[args[0]] -1;
-      await database.run('UPDATE users SET isPremium = ?, premiumDate = ?, premiumDuration = ? WHERE id = ?', [user.isPremium, user.premiumDate, user.premiumDuration, message.author.id]);
-      await database.run(`UPDATE userItems SET ${args[0]} = ? WHERE id = ?`, [newItem, message.author.id]);
+      const newItem = userItem.item[args[0]] -1;
+      await database.save(message.author.id, user)
+      await database.saveUserItem(message.author.id, newItem)
      
       return message.channel.send(`${message.author.username}! Premium has been set for ${premiumDurations[args[0]]} days to your account!`);
     }

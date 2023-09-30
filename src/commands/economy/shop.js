@@ -8,7 +8,7 @@ module.exports = {
   cooldown: 10,
   cd: true,
   run: async (client, message, args) => {
-    const itemData = await database.getAll('globalItems');
+    const itemData = await database.getItemAll();
 
     const sortedItems = Object.entries(itemData).filter(([_, item]) => item.buyAble).sort(([aKey, _aValue], [bKey, _bValue]) => parseInt(aKey) - parseInt(bKey));
 
