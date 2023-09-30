@@ -30,12 +30,12 @@ module.exports = {
 
     const target = message.mentions.members.first();
     if (!target) {
-      return deleteMessage(message.reply('Please mention a user'));
+        return deleteMessage(message.reply('Please mention a user'));
     }
 
     if (target.user.id == message.author.id) {
-      return deleteMessage(message.reply('You can\'t give money to yourself'));
-    } else if (target.user.id == message.author.bot) {
+        return deleteMessage(message.reply('You can\'t give money to yourself'));
+    } else if (target.user.bot) {
         return deleteMessage(message.reply('You can\'t give money to bot'))
     }
 

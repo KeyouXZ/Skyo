@@ -30,7 +30,7 @@ const database = {
         return console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Server with ID ${serverId} has been created`);
     },
     getItemAll: async function() {
-        return await globalSchema.find(); 
+        return await itemSchema.find(); 
     },
     getServer: async function(serverId) {
         return await serverSchema.findOne({ serverId });
