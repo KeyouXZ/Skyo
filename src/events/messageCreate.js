@@ -142,7 +142,7 @@ client.on('messageCreate', async (message) => {
             return message.channel.send(cooldownMessage).then(msg => {
             setTimeout(() => {
                 msg.delete();
-            }, cooldown_amount);
+            }, time_left.toFixed() * 1000);
             });
             //
             }
