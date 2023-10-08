@@ -82,7 +82,7 @@ module.exports = {
                     message.channel.send(`Welcome message updated to **${messageArgs}**`);
                 }
                 break
-
         }
+        cooldown.has(cooldowns, message.author.id, message)
     }
 }

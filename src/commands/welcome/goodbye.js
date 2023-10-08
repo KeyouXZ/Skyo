@@ -1,4 +1,4 @@
-const { EmbedBuilder, Collection } = require("discord.js");
+const { EmbedBuilder, Collection, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const { database, cooldown } = require("../../../utils/bot");
 const cooldowns = new Collection()
 
@@ -15,20 +15,43 @@ module.exports = {
     name: "goodbye",
     description: "Goodbye commands",
     usage: ["info", "wiki", "channel [#channel]", "message [message]"],
-    cooldown: 10,
+    cooldown: 20,
     run: async (client, message, args)  => {
         // Cooldowns 
         if (cooldown.has(cooldowns, message.author.id, message)) return;
 
         const serverID = message.member.guild.id;
         const goodbyeData = await database.getServer(serverID);
-        
+
         if (!args[0]) {
             return deleteMessage(message.reply("You must specify options wiki or info or channel or message"))
         }
 
         if (args[0] !== 'wiki' && args[0] !== 'info' && args[0] !== 'channel' && args[0] !== 'message') {
             return deleteMessage(message.reply('Invalid option. Please choose either "wiki" or info" or "channel" or "message".'))
+        }
+        
+        const confirm = new ButtonBuilder()
+        .setCustomId("confirm")
+        .setLabel("Confirm")
+        .setStyle(ButtonStyle.Danger);
+
+        const cancel = new ButtonBuilder()
+        .setCustomId("cancel")
+        .setLabel("Cancel")
+        .setStyle(ButtonStyle.Secondary);
+
+        const row = new ActionRowBuilder()
+        .addComponents(confirm, cancel)
+
+        let confirmMSG;
+        if (args[0] == "channel" || args[0] == 'message' && !args[1]) {
+            confirmMSG = await message.reply({
+                content: `Do you want to delete the goodbye ${args[0]}?`,
+                    components: [row]
+                })
+
+            var collector = confirmMSG.createMessageComponentCollector()
         }
 
         switch (args[0]) {
@@ -57,9 +80,32 @@ module.exports = {
                 const channelID = message.mentions.channels.first()?.id;
 
                 if (!channelID) {
-                    goodbyeData.goodbyeChannel = "";
-                    database.saveServer(serverID ,goodbyeData)
-                    message.channel.send('Goodbye channel removed')
+                    collector.on('collect', async interaction => {
+                        if (interaction.user.id !== message.author.id) {
+                            return interaction.reply({ content: "You are not authorized to use this button.", ephemeral: true });
+                        }
+                        if (interaction.customId === 'confirm') {
+                            confirm.setDisabled(true)
+                            cancel.setDisabled(true)
+                            confirmMSG.delete()
+                            message.channel.send('Goodbye channel removed')
+                            goodbyeData.goodbyeChannel = "";
+                            await database.saveServer(serverID ,goodbyeData) 
+                        }
+                        else if(interaction.customId == 'cancel') {
+                            confirm.setDisabled(true);
+                            cancel.setDisabled(true);
+                            confirmMSG.delete()
+                            message.channel.send('Goodbye channel not removed')
+
+                        }
+                        collector.stop()
+                    })
+                   collector.on('end', async interaction => {
+                       confirm.setDisabled(true)
+                       cancel.setDisabled(true)
+                   })
+                    
                     return;
                 } else {
                     goodbyeData.goodbyeChannel = channelID;
@@ -71,9 +117,34 @@ module.exports = {
                 const messageArgs = args.slice(1).join(' ');
 
                 if (!messageArgs) {
-                    goodbyeData.goodbyeMessage = "";
-                    database.saveServer(serverID, goodbyeData)
-                    message.channel.send('Goodbye message removed')
+                    const collector = confirmMSG.createMessageComponentCollector()
+
+                    collector.on('collect', async interaction => {
+                        if (interaction.user.id !== message.author.id) {
+                            return interaction.reply({ content: "You are not authorized to use this button.", ephemeral: true });
+                        }
+                        if (interaction.customId === 'confirm') {
+                            isClicked = true;
+                            confirm.setDisabled(true)
+                            cancel.setDisabled(true)
+                            confirmMSG.delete()
+                            message.channel.send('Goodbye message removed')
+                            goodbyeData.goodbyeMessage = "";
+                            await database.saveServer(serverID ,goodbyeData) 
+                        }
+                        else if(interaction.customId == 'cancel') {
+                            confirm.setDisabled(true);
+                            cancel.setDisabled(true);
+                            confirmMSG.delete()
+                            message.channel.send('Goodbye message not removed')
+
+                        }
+                        collector.stop()
+                    })
+                    collector.on('end', async interaction => {
+                       confirm.setDisabled(true)
+                       cancel.setDisabled(true)
+                   })
                     return;
                  } else {
                     goodbyeData.goodbyeMessage = messageArgs;
@@ -81,7 +152,8 @@ module.exports = {
                     message.channel.send(`Goodbye message updated to **${messageArgs}**`);
                 }
                 break
-
         }
+        
+        cooldown.has(cooldowns, message.author.id, message)
     }
 }
