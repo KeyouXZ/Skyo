@@ -50,8 +50,6 @@ module.exports = {
                 content: `Do you want to delete the goodbye ${args[0]}?`,
                     components: [row]
                 })
-
-            var collector = confirmMSG.createMessageComponentCollector()
         }
 
         switch (args[0]) {
@@ -80,6 +78,7 @@ module.exports = {
                 const channelID = message.mentions.channels.first()?.id;
 
                 if (!channelID) {
+                    const collector = confirmMSG.createMessageComponentCollector()
                     collector.on('collect', async interaction => {
                         if (interaction.user.id !== message.author.id) {
                             return interaction.reply({ content: "You are not authorized to use this button.", ephemeral: true });
@@ -141,7 +140,7 @@ module.exports = {
                         }
                         collector.stop()
                     })
-                    collector.on('end', async interaction => {
+                    collector.on('end', async (collected, reason) => {
                        confirm.setDisabled(true)
                        cancel.setDisabled(true)
                    })
