@@ -52,22 +52,29 @@ client.on('messageCreate', async (message) => {
     if (cmd.length == 0) return;
     let command = client.commands.get(cmd);
     if (!command) command = client.commands.get(client.aliases.get(cmd));
-  
     if (!command?.run) return;
+    if (command?.userPerms && !message.member.permissions.has(command.userPerms)) {
+        const missingPerms = command.userPerms
+            .filter((perm) => !message.member.permissions.has(perm))
+            .map((perm) => `\`${perm}\``)
+            .join(', ');
+
+        return message.reply(`You don't have the required permissions to use this command: ${missingPerms}`);
+    }
     
     const serverData = await database.getServer(message.member.guild.id)
-    if (!serverData) await database.createServer(message.member.guild.id)
+    if (!serverData) await database.createServer(message)
+    
     const firstData = await database.get(message.author.id);
-  
     if (!firstData) {
-        await database.createUser(message.author.id);
+        await database.createUser(message);
     }
   
     const targetMember = message.mentions.members.first();
     if (targetMember && !targetMember.user.bot) {
         const targetData = await database.get(message.mentions.members.first().user.id);
         if (!targetData) {
-            await database.createUser(message.mentions.members.first().user.id);
+            await database.createUser(message, message.mentions.members.first());
         }
     }
     

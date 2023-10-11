@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials, Collection, EmbedBuilder } = require("discord.js");
+const { Client, GatewayIntentBits, Partials, Collection, EmbedBuilder, WebhookClient } = require("discord.js");
 const client = new Client({
     restRequestTimeout: 60000,
     intents: [
@@ -31,7 +31,7 @@ const client = new Client({
 
 require("dotenv").config();
 const fs = require("fs");
-const config = require("../utils/config");
+const { readline, config } = require("../utils/bot");
 const chalk = require("chalk")
 
 client.commands = new Collection();
@@ -51,18 +51,14 @@ fs.readdirSync("./src/handlers/").forEach((handler) => {
 client.login(process.env.TOKEN);
 
 // Terminal command
-
-const { readline } = require("../utils/bot");
 readline.create(client);
 
 // Error log
 if (process.env.WEBHOOK_URL) {
-    const { WebhookClient } = require("discord.js");
-
     const webhook = new WebhookClient({
         url: process.env.WEBHOOK_URL,
     });
-
+    
     process.on("unhandledRejection", (reason, p) => {
         const uR = new EmbedBuilder()
         .setTitle("Unhandled Rejection")
@@ -73,11 +69,11 @@ if (process.env.WEBHOOK_URL) {
                 value: `\`\`\`${reason.stack}\`\`\``
             }
         ]);
-        webhook.send(uR)
+        webhook.send({username: "Skyo Logger", embeds: [uR]})
     })
 
     process.on('uncaughtException', (err, origin) => {
-        const uE= new EmbedBuilder()
+        const uE = new EmbedBuilder()
         .setTitle("Unhandled Rejection")
         .setColor('Red')
         .addFields([
@@ -86,7 +82,7 @@ if (process.env.WEBHOOK_URL) {
                 value: `\`\`\`${err.stack}\`\`\``
             }
         ]);
-        webhook.send(uE)
+        webhook.send({ username: "Skyo Logger", embeds: [uE]})
     })
 }
 

@@ -33,7 +33,11 @@ const itemScema = new mongoose.Schema ({
     },
     effect: [{
         type: String
-    }]
+    }],
+    effectDuration: {
+        type: Number,
+        default: 0
+    }
 })
 
 module.exports = mongoose.model("Item", itemScema)

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const serverSchema = new mongoose.Schema({
-    serverId: {
+    serverID: {
         type: String,
         require: true
     },
