@@ -53,13 +53,17 @@ client.on('messageCreate', async (message) => {
     let command = client.commands.get(cmd);
     if (!command) command = client.commands.get(client.aliases.get(cmd));
     if (!command?.run) return;
-    if (command?.userPerms && !message.member.permissions.has(command.userPerms)) {
-        const missingPerms = command.userPerms
-            .filter((perm) => !message.member.permissions.has(perm))
-            .map((perm) => `\`${perm}\``)
-            .join(', ');
-
-        return message.reply(`You don't have the required permissions to use this command: ${missingPerms}`);
+    if (command.userPerms) {
+        const missingPerm = []
+        command.userPerms.find(c => {
+            if (!message.member.permissions.has(c)) {
+                missingPerm.push(c)
+            }
+        })
+        
+        if (missingPerm.length > 0) {
+            return message.reply(`You don't have the required permissions to use this command: ${missingPerm.join(', ')}`);
+        }
     }
     
     const serverData = await database.getServer(message.member.guild.id)

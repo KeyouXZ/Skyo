@@ -38,7 +38,7 @@ module.exports = {
 
         let confirmMSG = null;
         let isClicked = false;
-        if (args[0] == "channel" || args[0] == 'message' && !args[1]) {
+        if ((args[0] == "channel" && !message.mentions.channels.first()) || (args[0] == 'message' && !args[1])) {
             confirmMSG = await message.reply({
                 content: `Do you want to delete the goodbye ${args[0]}?`,
                     components: [row]
@@ -57,15 +57,24 @@ module.exports = {
 
         switch (args[0]) {
             case "info":
-                let iwc = `<#${goodbyeData.goodbyeChannel}> (${goodbyeData.goodbyeChannel})`;
-                if (goodbyeData.goodbyeChannel == '') iwc = '-';
-                let iwm = `_${goodbyeData.goodbyeMessage}_`;
-                if (goodbyeData.goodbyeMessage == '') iwm = '-';
+                let igc = `<#${goodbyeData.goodbyeChannel}> (${goodbyeData.goodbyeChannel})`;
+                if (goodbyeData.goodbyeChannel == '') igc = '-';
+                let igm = `_${goodbyeData.goodbyeMessage}_`;
+                if (goodbyeData.goodbyeMessage == '') igm = '-';
+                let rgm = goodbyeData.goodbyeMessage
+                .replace("{member}", `<@${message.author.id}>`)
+		        .replace("{member(id)}", message.author.id)
+		        .replace("{member(tag)}", message.author.tag)
+		        .replace("{member(name)}", message.author.username)
+		        .replace("{server}", message.guild.name)
+		        .replace("{member(count)}", message.guild.memberCount);
+                if (!rgm) rgm = '-';
                 const infoEmbed = new EmbedBuilder()
                 .setColor('Blue')
                 .addFields(
-                    { name: 'Goodbye Channel', value: iwc },
-                    { name: 'Goodbye Message', value: iwm },
+                    { name: 'Goodbye Channel', value: igc },
+                    { name: 'Goodbye Message', value: igm },
+                    { name: 'Result', value: rgm }
                 )
                 .setTimestamp();
                 return message.channel.send({ embeds: [infoEmbed]})
@@ -78,7 +87,7 @@ module.exports = {
                 
                 return message.channel.send({embeds: [wikiEmbed]})
             case "channel":
-                const channelID = message.mentions.channels.first()?.id;
+                const channelID = message.mentions.channels.first()?.id
 
                 if (!channelID) {
                     collector.on('collect', async interaction => {

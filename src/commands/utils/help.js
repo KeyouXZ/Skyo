@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
-const mPrefix = process.env.CPREFIX;
+const { config } = require("../../../utils/bot")
 
 module.exports = {
     name: "help",
@@ -10,7 +10,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle("Command List")
             .setDescription(
-                `Here is the list of commands!\nFor more info on a specific command, use \`${mPrefix}cmdhelp <command>\`\nNeed more help? Come join our [guild](https://discord.com/invite/valhalla)`
+                `Here is the list of commands!\nFor more info on a specific command, use \`${config.prefix[0]}cmdhelp <command/aliase>\`\nNeed more help? Come join our [guild](https://discord.com/invite/n9qS6CWqqg)`
             )
             .addFields([
                 {

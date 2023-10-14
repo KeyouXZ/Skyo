@@ -38,12 +38,13 @@ module.exports = {
 
         let confirmMSG = null;
         let isClicked = false;
-        if (args[0] == "channel" || args[0] == 'message' && !args[1]) {
+        if ((args[0] == "channel" && !message.mentions.channels.first()) || (args[0] == 'message' && !args[1])) {
             confirmMSG = await message.reply({
                 content: `Do you want to delete the welcome ${args[0]}?`,
                     components: [row]
             })
             var collector = confirmMSG.createMessageComponentCollector()
+
             setTimeout(() => {
                 if (isClicked == false) {
                     confirm.setDisabled(true);
@@ -61,11 +62,21 @@ module.exports = {
                 if (welcomeData.welcomeChannel == '') iwc = '-';
                 let iwm = `_${welcomeData.welcomeMessage}_`;
                 if (welcomeData.welcomeMessage == '') iwm = '-';
+                let rwm = welcomeData.welcomeMessage
+                .replace("{member}", `<@${message.author.id}>`)
+		        .replace("{member(id)}", message.author.id)
+		        .replace("{member(tag)}", message.author.tag)
+		        .replace("{member(name)}", message.author.username)
+		        .replace("{server}", message.guild.name)
+		        .replace("{member(count)}", message.guild.memberCount);
+                if (!rwm) rwm = '-';
+
                 const infoEmbed = new EmbedBuilder()
                 .setColor('Blue')
                 .addFields(
                     { name: 'Welcome Channel', value: iwc },
                     { name: 'Welcome Message', value: iwm },
+                    { name: 'Result', value: rwm}
                 )
                 .setTimestamp();
                 return message.channel.send({ embeds: [infoEmbed]})
@@ -79,7 +90,7 @@ module.exports = {
                 return message.channel.send({embeds: [wikiEmbed]})
                 break;
             case "channel":
-                const channelID = message.mentions.channels.first()?.id;
+                const channelID = message.mentions.channels.first()?.id
                 if (!channelID) {
                     collector.on('collect', async interaction => {
                         if (interaction.user.id !== message.author.id) {

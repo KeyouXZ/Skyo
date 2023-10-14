@@ -47,8 +47,7 @@ module.exports = async (client) => {
     });
     console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), chalk.yellow.bold(client.commands.size), 'commands loaded');
     
-    // Load slashCommand [Deactivate]
-    /*
+    // Load slashCommand
     console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Loading slash commands...`)
     const slashCommands = [];
   
@@ -87,7 +86,6 @@ module.exports = async (client) => {
         }
     })();
     console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), chalk.yellow.bold(client.slashCommands.size), 'slash commands loaded')
-    */
     
     // Load MongoDB
     mongoose.set('strictQuery', false);
