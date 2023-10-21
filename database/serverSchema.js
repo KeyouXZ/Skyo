@@ -20,7 +20,10 @@ const serverSchema = new mongoose.Schema({
     goodbyeChannel: {
         type: String,
         default: ""
-    }
+    },
+    reactionrole: [{
+        type: Object
+    }]
 });
 
 module.exports = mongoose.model("Servers", serverSchema)
