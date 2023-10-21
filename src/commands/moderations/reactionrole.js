@@ -76,7 +76,6 @@ module.exports = {
                     return util.tempMessage(message, "Invalid messsage ID");
                 }
             
-                const role = message.mentions.roles.first();
                 if (!role) {
                     return util.tempMessage(message, "Please mention role");
                 }
