@@ -70,7 +70,6 @@ module.exports = {
                 break
             
             case "del":
-                const msgID = args[1];
                 if (!msgID) {
                     return util.tempMessage(message, "Please specify message ID");
                 } else if (isNaN(parseInt(msgID))) {
