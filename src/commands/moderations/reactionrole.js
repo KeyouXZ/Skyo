@@ -116,7 +116,7 @@ module.exports = {
                 .setColor("Random");
                 
                 let num = 0
-                await data.reactionrole.find(c => {
+                data.reactionrole.find(c => {
                     num++;
                     listEmbed.addFields({
                         name: num,
