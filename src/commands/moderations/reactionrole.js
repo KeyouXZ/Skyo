@@ -120,7 +120,7 @@ module.exports = {
                     num++;
                     listEmbed.addFields({
                         name: num,
-                        value: `Message ID: ${c.messageID} (<#${c.channelID})>\nEmoji: ${c.emoji}\nRole: <@&${c.role}>`
+                        value: `Message ID: ${c.messageID}\nEmoji: ${c.emoji}\nRole: <@&${c.role}>`
                     })
                 })
                 message.channel.send({ embeds: [listEmbed]})
