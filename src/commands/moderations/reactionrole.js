@@ -15,21 +15,17 @@ module.exports = {
         
         if (!args[0]) return util.tempMessage(message, "Please specify options \"add\" or \"del\"")
         
-        const data = database.getServer(message.guild.id)
+        const data = await database.getServer(message.guild.id)
         switch (args[0]) {
             case "add":
-                let msgID = args[1]
+                const msgID = args[1]
                 if (!msgID) {
                     return util.tempMessage(message, "Please specify message ID")
                 } else if (isNaN(parseInt(msgID))) {
                     return util.tempMessage(message, "Invalid message ID")
                 }
-                try {
-                    msgID = message.channel.fetch(msgID)
-                    if (!msgID) return util.tempMessage(message, "Can't find message with that ID on this channel")
-                } catch (e) {
-                    return util.tempMessage(message, "Can't find message with that ID on this channel")
-                }
+                const fetchMsgID = await message.channel.messages.fetch(msgID)
+                if (!fetchMsgID) return util.tempMessage(message, "Can't find message with that ID on this channel")
                 
                 const emoji = args[2]
                 const emojiPattern = /[\uD83C-\uDBFF\uDC00-\uDFFF\uD83D\uDC00-\uDE4F\uD83D\uDE80-\uDEFF\u2700-\u27BF\u2300-\u23FF\u2B50\u2600-\u26FF\u20D0-\u20FF]+/g;
@@ -50,7 +46,9 @@ module.exports = {
                     role: role.id
                 }
                 
-                await database.saveServer(message.guild.id, reactionrole.newRR)
+                data.reactionrole.push(newRR)
+                await database.saveServer(message.guild.id, data)
+                fetchMsgID.react(emoji)
                 message.channel.send(`Added ${emoji} with role <@&${role.id}>`)
                 break
             
