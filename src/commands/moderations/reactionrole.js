@@ -18,14 +18,15 @@ module.exports = {
         const data = database.getServer(message.guild.id)
         switch (args[0]) {
             case "add":
-                const msgID = args[1]
+                let msgID = args[1]
                 if (!msgID) {
                     return util.tempMessage(message, "Please specify message ID")
                 } else if (isNaN(parseInt(msgID))) {
                     return util.tempMessage(message, "Invalid message ID")
                 }
                 try {
-                    const target = message.channel.fetch(msgID)
+                    msgID = message.channel.fetch(msgID)
+                    if (!msgID) return util.tempMessage(message, "Can't find message with that ID on this channel")
                 } catch (e) {
                     return util.tempMessage(message, "Can't find message with that ID on this channel")
                 }
