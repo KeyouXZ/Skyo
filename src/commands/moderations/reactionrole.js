@@ -24,8 +24,14 @@ module.exports = {
                 } else if (isNaN(parseInt(msgID))) {
                     return util.tempMessage(message, "Invalid message ID")
                 }
-                const fetchMsgID = await message.channel.messages.fetch(msgID)
-                if (!fetchMsgID) return util.tempMessage(message, "Can't find message with that ID on this channel")
+                //const fetchMsgID = await message.channel.messages.fetch(msgID)
+                //if (!fetchMsgID) return util.tempMessage(message, "Can't find message with that ID on this channel")
+                try {
+                    var fetchMsgID = await message.channel.messages.fetch(msgID)
+                    if (!fetchMsgID) return util.tempMessage(message, "Can't find message with that ID on this channel")
+                } catch (err) {
+                    return util.tempMessage(message, "Can't find message with that ID on this channel")
+                }
                 
                 const emoji = args[2]
                 const emojiPattern = /[\uD83C-\uDBFF\uDC00-\uDFFF\uD83D\uDC00-\uDE4F\uD83D\uDE80-\uDEFF\u2700-\u27BF\u2300-\u23FF\u2B50\u2600-\u26FF\u20D0-\u20FF]+/g;
