@@ -13,7 +13,7 @@ const { createServer } = require('http');
 const prefixes = client.prefix;
 const cooldown = new Collection();
 const premium = new Collection();
-const developer = new Collection();
+const dev = new Collection();
 const cd = new Collection();
 
 const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
@@ -124,10 +124,10 @@ client.on('messageCreate', async (message) => {
 
     // DEVELOPER USER 
     if (command) {
-        if (!developer.has(command.name)) {
-            developer.set(command.name, new Collection());
+        if (!dev.has(command.name)) {
+            dev.set(command.name, new Collection());
         }
-        if (command.developer && data.isDeveloper == 0) {
+        if (command.developer && data.isDeveloper == false) {
             return;
         }
     }

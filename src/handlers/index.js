@@ -102,4 +102,22 @@ module.exports = async (client) => {
         console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Failed to connect to MongoDB: ${err.msg} ${err.stack}`));
         process.exit(1);
     }
+
+	// Load HTTP Server
+	const prettyMilliseconds = require("pretty-ms");
+	console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `HTTP Server starting...`);
+	try {
+	    const port = process.env.PORT || 3000
+	    const server = require('http').createServer((req, res) => {
+		    res.statusCode = 200;
+		    res.setHeader('Content-Type', 'text/plain');
+		    res.end(`<p>User: ${client.user?.tag}</p><hr><p>Uptime: ${prettyMilliseconds(client.uptime)}</p><p>Users: ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}</p><p>Servers: ${client.guilds.cache.size}</p><hr>`);
+	    });
+	
+	    server.listen(port, "0.0.0.0", () => {
+	        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `HTTP Server running on port ${port}`)
+	    });
+    } catch (err) {
+		console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Failed to start HTTP Server: ${err.msg} ${err.stack}`));
+	}
 }

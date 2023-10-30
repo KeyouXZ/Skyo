@@ -43,8 +43,14 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    lastDaily: Date,
-    lastWeekly: Date
+    lastDaily: {
+		type: Number,
+		default: 0
+	},
+    lastWeekly: {
+		type: Number,
+		default: 0
+	}
 });
 
 const userSchemaData = mongoose.model("Users", userSchema)

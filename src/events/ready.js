@@ -1,8 +1,10 @@
 const { ActivityType } = require('discord.js');
 const client = require('../index');
 const chalk = require("chalk");
+const { config } = require("../../utils/bot")
 
 client.on("ready", () => {
+	config.set(client)
     const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
 	const activities = [
 		{ name: `${client.guilds.cache.size} Servers`, type: ActivityType.Listening },

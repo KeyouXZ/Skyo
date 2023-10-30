@@ -16,7 +16,7 @@ module.exports = {
       .setTitle('Bot Information')
       .addFields(
         { name: `General`, value: `**Name :** ${client.user.username}\n**ID :** ${client.user.id}\n**Tag :** ${client.user.discriminator}\n**Created At :** ${createdAtFormatted}\n**Developer :** <@${config.developer.join(', ')}>\n**Prefix :** ${config.prefix.join(', ')}\n**Uptime :** ${prettyMilliseconds(client.uptime)}`},
-        { name: "Total", value: `**Member :** ${client.users.cache.size}\n**Server :** ${client.guilds.cache.size}\n**Channel :** ${client.channels.cache.size}` }
+        { name: "Total", value: `**Member :** ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}\n**Server :** ${client.guilds.cache.size}\n**Channel :** ${client.channels.cache.size}` }
       )
       .setColor('Blue')
       .setTimestamp()

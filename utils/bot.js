@@ -187,7 +187,10 @@ const util = {
 }
 
 const config = {
-    "prefix": [`${process.env.PREFIX}`, `<@${process.env.CLIENT_ID}>`, "V!"],
+	set: function (c) {
+		this.prefix.push(`<@${c.user.id}>`)
+	},
+    "prefix": [`${process.env.PREFIX}`, "V!"],
     "developer": ["837630150954713099"],
     "currency": "Kc."
 }

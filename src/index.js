@@ -29,7 +29,6 @@ const client = new Client({
     ],
 });
 
-require("dotenv").config();
 const fs = require("fs");
 const { readline, config } = require("../utils/bot");
 const chalk = require("chalk")
