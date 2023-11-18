@@ -1,5 +1,5 @@
+require("dotenv").config();
 const chalk = require("chalk");
-const mongoose = require("mongoose");
 const { WebhookClient, EmbedBuilder } = require("discord.js")
 const userSchema = require("../database/userSchema");
 const itemSchema = require("../database/itemSchema");
@@ -199,8 +199,11 @@ const util = {
 }
 
 const config = {
+    env: function (c) {
+        return process.env[c]
+    },
 	set: function (c) {
-		this.prefix.push(`<@${c.user.id}>`)
+		return this.prefix.push(`<@${c.user.id}>`)
 	},
     "prefix": [`${process.env.PREFIX}`, "V!"],
     "developer": ["837630150954713099"],

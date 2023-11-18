@@ -1,14 +1,9 @@
 const { EmbedBuilder, Collection } = require('discord.js');
 const ms = require('ms');
 const client = require('../index.js');
-const config = require('../../utils/config');
-const path = require('path');
-const fs = require('fs');
 const moment = require('moment');
 const chalk = require('chalk');
-const mPrefix = process.env.CPREFIX;
-const { database } = require('../../utils/bot');
-const { createServer } = require('http');
+const { database, config } = require('../../utils/bot');
 
 const prefixes = client.prefix;
 const cooldown = new Collection();

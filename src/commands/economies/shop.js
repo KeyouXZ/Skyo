@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-const { database, cooldown } = require('../../../utils/bot');
-const config = require('../../../utils/config');
+const { database, cooldown, config } = require('../../../utils/bot');
 
 module.exports = {
   name: 'shop',
