@@ -89,6 +89,12 @@ const database = {
 };
 
 const cooldown = {
+    /**
+     * 
+     * @param {collection} cooldowns Cooldown collection from discord.js
+     * @param {number} userID 
+     * @param {number} cooldownTime 
+     */
     set: async function (cooldowns, userID, cooldownTime) {
         const data = await database.get(userID);
         let cooldownAmount = cooldownTime * 1000;
@@ -176,6 +182,12 @@ const readline = {
 };
 
 const util = {
+    /**
+     * 
+     * @param {*} m Message variable from discord.js
+     * @param {string} message New message "Send Me"
+     * @param {number} timeout New timeout in second
+     */
     tempMessage: function(m, message, timeout) {
         const time = timeout * 1000 || 15000
         m.reply(message).then(msg => {
