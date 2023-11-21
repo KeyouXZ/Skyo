@@ -25,7 +25,7 @@ module.exports = {
             const alClaim = new EmbedBuilder()
             .setColor('Red')
             .setDescription(`⏱️ **|** You have to wait \`${hours}H ${minutes}M ${seconds}S.\``);
-            message.reply({ embeds: [alClaim] });
+            return message.reply({ embeds: [alClaim] });
         } else {
             let dailyAmount = 310;
             let additionalAmount = 0;
@@ -52,7 +52,7 @@ module.exports = {
             const claimEmbed = new EmbedBuilder()
             .setColor('Green')
             .setDescription(messageContent);
-            message.reply({ embeds: [claimEmbed] });
+            return message.reply({ embeds: [claimEmbed] });
         }
     },
 };

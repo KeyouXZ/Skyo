@@ -1,4 +1,5 @@
 const { util } = require('../../../utils/bot')
+const utils = util;
 
 module.exports = {
 	name: 'cmd',
@@ -6,7 +7,7 @@ module.exports = {
 	dev: false,
 	run: async (client, message, args) => {
 		const arg1 = args.slice(0).join(' ');
-		if (!arg1) return util.tempMessage(message, "Please provide command")
+		if (!arg1) return utils.tempMessage(message, "Please provide command")
 
 		const util = require('node:util');
         const exec = util.promisify(require('node:child_process').exec);

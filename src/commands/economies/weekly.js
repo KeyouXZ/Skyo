@@ -9,7 +9,7 @@ module.exports = {
 	premium: true,
 	run: async (client, message, args) => {
 		const userId = message.author.id;
-		const data = await database.get(message.author.id);
+		const data = await database.get(userId);
 
 		const lastWeekly = data.lastWeekly || 0;
 		const wallet = data.wallet;
@@ -29,7 +29,7 @@ module.exports = {
 				.setDescription(
 					`⏱️ **|** You have to wait \`${days}D ${hours}H ${minutes}M ${seconds}S.\``
 				);
-			message.reply({ embeds: [alClaim] });
+			return message.reply({ embeds: [alClaim] });
 		} else {
 			data.wallet += 2170;
 			data.lastWeekly = now;
@@ -41,7 +41,7 @@ module.exports = {
 						config.currency
 					}${weeklyAmount.toLocaleString()} from weekly reward`
 				);
-			message.reply({ embeds: [Claim] });
+			return message.reply({ embeds: [Claim] });
 		}
 	},
 };

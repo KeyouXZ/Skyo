@@ -13,6 +13,10 @@ const serverSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
+    welcomeEnable: {
+        type: Boolean,
+        default: false
+    },
     goodbyeMessage: {
         type: String,
         default: ""
@@ -20,6 +24,10 @@ const serverSchema = new mongoose.Schema({
     goodbyeChannel: {
         type: String,
         default: ""
+    },
+    goodbyeEnable: {
+        type: Boolean,
+        default: false
     },
     reactionrole: [{
         type: Object
