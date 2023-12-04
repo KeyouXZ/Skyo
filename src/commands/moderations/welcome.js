@@ -5,7 +5,7 @@ const cooldowns = new Collection()
 module.exports = {
     name: "welcome",
     description: "Welcome commands",
-    usage: ["info", "wiki", "channel [#channel]", "message [message]"],
+    usage: ["info", "wiki", "channel [#channel]", "message [message]", "enable <true/false>"],
     cooldown: 5,
     userPerms: ["ManageMessages"],
     run: async (client, message, args)  => {
@@ -19,10 +19,24 @@ module.exports = {
             return util.tempMessage(message, "Please select options wiki or info or channel or message")
         }
 
-        if (args[0] !== 'wiki' && args[0] !== 'info' && args[0] !== 'channel' && args[0] !== 'message') {
+        if (args[0] !== 'wiki' && args[0] !== 'info' && args[0] !== 'channel' && args[0] !== 'message' && args[0] !== 'enable') {
             return util.tempMessage(message, 'Invalid option. Please choose either "wiki" or info" or "channel" or "message".')
         }
         
+        if (args[0] == "enable") {
+            if (args[1] == "true") {
+                message.channel.send("Welcome has enabled")
+                welcomeData.welcomeEnable = true
+                return await database.saveServer(serverID, welcomeData)
+            } else if (args[1] == "false") {
+                message.channel.send("Welcome has disabled")
+                welcomeData.welcomeEnable = false
+                return await database.saveServer(serverID, welcomeData)
+            } else {
+                return util.tempMessage(message, "Invalid word " + args[1] + ". Please choose either \"true\" or \"false\"")
+            }
+        }
+
         const confirm = new ButtonBuilder()
         .setCustomId("confirm")
         .setLabel("Confirm")
@@ -62,6 +76,7 @@ module.exports = {
                 if (welcomeData.welcomeChannel == '') iwc = '-';
                 let iwm = `_${welcomeData.welcomeMessage}_`;
                 if (welcomeData.welcomeMessage == '') iwm = '-';
+                let iws = welcomeData.welcomeEnable ? 'Enable' : 'Disable';
                 let rwm = welcomeData.welcomeMessage
                 .replace("{member}", `<@${message.author.id}>`)
 		        .replace("{member(id)}", message.author.id)
@@ -76,6 +91,7 @@ module.exports = {
                 .addFields(
                     { name: 'Welcome Channel', value: iwc },
                     { name: 'Welcome Message', value: iwm },
+                    { name: 'Welcome Status', value: iws },
                     { name: 'Result', value: rwm}
                 )
                 .setTimestamp();

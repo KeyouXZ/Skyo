@@ -7,7 +7,7 @@ client.on("guildMemberRemove", async (member) => {
 	const serverID = member.guild.id;
 	const goodbyeData = await database.getServer(serverID)
 	if (!goodbyeData) { return };
-	if (goodbyeData.goodbyeChannel === "" || goodbyeData.goodbyeMessage === "") { return };
+	if (goodbyeData.goodbyeChannel === "" || goodbyeData.goodbyeMessage === "" || goodbyeData.goodbyeEnable == false) { return };
 
 	const goodbyeChannel = goodbyeData.goodbyeChannel;
 	const goodbyeMessage = goodbyeData.goodbyeMessage;

@@ -4,7 +4,7 @@ const utils = util;
 module.exports = {
 	name: 'cmd',
 	description: "Check bot's ping.",
-	dev: false,
+	dev: true,
 	run: async (client, message, args) => {
 		const arg1 = args.slice(0).join(' ');
 		if (!arg1) return utils.tempMessage(message, "Please provide command")

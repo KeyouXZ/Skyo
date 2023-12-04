@@ -5,7 +5,7 @@ const cooldowns = new Collection()
 module.exports = {
     name: "goodbye",
     description: "Goodbye commands",
-    usage: ["info", "wiki", "channel [#channel]", "message [message]"],
+    usage: ["info", "wiki", "channel [#channel]", "message [message]", "enable <true/false>"],
     cooldown: 5,
     userPerms: ["ManageMessages"],
     run: async (client, message, args)  => {
@@ -21,6 +21,20 @@ module.exports = {
 
         if (args[0] !== 'wiki' && args[0] !== 'info' && args[0] !== 'channel' && args[0] !== 'message') {
             return util.tempMessage(message, 'Invalid option. Please choose either "wiki" or info" or "channel" or "message".')
+        }
+
+        if (args[0] == "enable") {
+            if (args[1] == "true") {
+                message.channel.send("Welcome has enabled")
+                goodbyeData.goodbyeEnable = true
+                return await database.saveServer(serverID, goodbyeData)
+            } else if (args[1] == "false") {
+                message.channel.send("Welcome has disabled")
+                goodbyeData.welcomeEnable = false
+                return await database.saveServer(serverID, goodbyeData)
+            } else {
+                return util.tempMessage(message, "Invalid word " + args[1] + ". Please choose either \"true\" or \"false\"")
+            }
         }
         
         const confirm = new ButtonBuilder()
@@ -61,6 +75,7 @@ module.exports = {
                 if (goodbyeData.goodbyeChannel == '') igc = '-';
                 let igm = `_${goodbyeData.goodbyeMessage}_`;
                 if (goodbyeData.goodbyeMessage == '') igm = '-';
+                let igs = goodbyeData.goodbyeEnable ? 'Enable' : 'Disable'
                 let rgm = goodbyeData.goodbyeMessage
                 .replace("{member}", `<@${message.author.id}>`)
 		        .replace("{member(id)}", message.author.id)
@@ -74,6 +89,7 @@ module.exports = {
                 .addFields(
                     { name: 'Goodbye Channel', value: igc },
                     { name: 'Goodbye Message', value: igm },
+                    { name: 'Goodbye Status', value: igs },
                     { name: 'Result', value: rgm }
                 )
                 .setTimestamp();

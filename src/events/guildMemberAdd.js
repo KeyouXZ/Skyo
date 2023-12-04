@@ -6,7 +6,7 @@ client.on("guildMemberAdd", async (member) => {
 	const welcomeData = await database.getServer(serverID)
 
 	if (!welcomeData) { return };
-	if (welcomeData.welcomeChannel === "" || welcomeData.welcomeMessage === "" ) { return };
+	if (welcomeData.welcomeChannel === "" || welcomeData.welcomeMessage === "" || welcomeData.welcomeEnable == false) { return };
 
 	const welcomeChannel = welcomeData.welcomeChannel;
 	const welcomeMessage = welcomeData.welcomeMessage;
