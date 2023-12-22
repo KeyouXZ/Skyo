@@ -6,7 +6,9 @@ module.exports = {
     cooldown: 10,
     cd: true,
     run: async (client, message, args) => {
-        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&scope=bot%20applications.commands`;
+        const client_id = process.env.CLIENT_ID ? process.env.CLIENT_ID : client.user.id;
+        if (!client_id) return message.channel.send("Error while fetching bot id")
+        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&permissions=8&scope=bot%20applications.commands`;
         const embed = new EmbedBuilder()
             .setTitle("Invite me")
             .setDescription(

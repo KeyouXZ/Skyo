@@ -39,7 +39,7 @@ module.exports = {
             }
 
             data.wallet += dailyAmount + additionalAmount;
-            data.lastDaily += now;
+            data.lastDaily = now;
             // Update data
             await database.save(userId, data)
 
