@@ -19,7 +19,7 @@ module.exports = {
             return util.tempMessage(message, "Please select options wiki or info or channel or message")
         }
 
-        if (args[0] !== 'wiki' && args[0] !== 'info' && args[0] !== 'channel' && args[0] !== 'message') {
+        if (args[0] !== 'wiki' && args[0] !== 'info' && args[0] !== 'channel' && args[0] !== 'message' && args[0] !== 'enable') {
             return util.tempMessage(message, 'Invalid option. Please choose either "wiki" or info" or "channel" or "message".')
         }
 
