@@ -39,13 +39,13 @@ client.aliases = new Collection();
 client.slashCommands = new Collection();
 client.buttons = new Collection();
 client.prefix = config.prefix;
+client.cooldowns = new Collection();
+client.auth = new Collection();
 
 module.exports = client;
 
 // Handler
-fs.readdirSync("./src/handlers/").forEach((handler) => {
-    require(`./handlers/${handler}`)(client);
-});
+require(`./handlers/index.js`)(client);
 
 // Enter bots
 client.login(process.env.TOKEN);

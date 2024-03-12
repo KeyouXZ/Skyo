@@ -9,7 +9,7 @@ client.on("ready", () => {
 	const activities = [
 		{ name: `${client.guilds.cache.size} Servers`, type: ActivityType.Listening },
 		{ name: `${client.channels.cache.size} Channels`, type: ActivityType.Playing },
-		{ name: `${client.users.cache.size} Users`, type: ActivityType.Watching }
+		{ name: `${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)} Users`, type: ActivityType.Watching }
 	];
 	const status = [
 		'online'
