@@ -3,7 +3,7 @@ const chalk = require('chalk');
 // Required by slash commands
 const { REST, Routes, PermissionsBitField } = require('discord.js');
 const TOKEN = process.env.TOKEN;
-const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_ID = process.env.CLIENT_ID ? process.env.CLIENT_ID : 999999;
 const rest = new REST({ version: '9' }).setToken(TOKEN);
 // Required by MongoDB
 const mongoose = require("mongoose");

@@ -80,7 +80,7 @@ const cooldown = {
         const command = message.content.slice(prefix.length).trim().split(/ +/g).shift().toLowerCase();
         
         const data = await database.get(client.auth.get(message.author.id)?.name);
-        let commandCooldown = client.commands.get(command)?.cooldown || client.commands.get(client.aliases.get(command)).cooldown;
+        let commandCooldown = client.commands.get(command)?.cooldown || client.commands.get(client.aliases.get(command))?.cooldown || 15;
         
         let cooldownAmount = commandCooldown * 1000 || 15 * 1000;
         
