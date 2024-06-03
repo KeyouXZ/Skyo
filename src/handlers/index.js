@@ -2,8 +2,9 @@ const fs = require("fs");
 const chalk = require('chalk');
 // Required by slash commands
 const { REST, Routes, PermissionsBitField } = require('discord.js');
+const { logger } = require("../../utils/bot")
 const TOKEN = process.env.TOKEN;
-const CLIENT_ID = process.env.CLIENT_ID ? process.env.CLIENT_ID : 999999;
+const CLIENT_ID = process.env.CLIENT_ID;
 const rest = new REST({ version: '9' }).setToken(TOKEN);
 // Required by MongoDB
 const mongoose = require("mongoose");
@@ -11,8 +12,7 @@ const url = process.env.MONGO_URL;
 
 module.exports = async (client) => {
     // Load events
-    const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Loading events...`);
+    logger.info(`Loading events...`)
   
     let loadedEvents = 0;
     fs.readdirSync('./src/events/').filter((files) => files.endsWith('.js')).forEach((event) => {
@@ -20,15 +20,15 @@ module.exports = async (client) => {
             require(`../events/${event}`);
             loadedEvents++;
         } catch (error) {
-            console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Unable to load file ${event.replace('.js', '')}: ${error.message} ${error.stack}`));
+            logger.warn(`Unable to load ${event.replace('.js', '')}`)
             process.exit(1);
         }
     });
 
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), chalk.yellow.bold(loadedEvents), 'events loaded');
+    logger.info(`%%${loadedEvents}%% events loaded`)
     
     // Load commands
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Loading commands...`);
+    logger.info(`Loading commands...`)
   
     fs.readdirSync('./src/commands/').forEach(dir => {
         const files = fs.readdirSync(`./src/commands/${dir}/`).filter(file => file.endsWith('.js'));
@@ -45,10 +45,10 @@ module.exports = async (client) => {
             }
         });
     });
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), chalk.yellow.bold(client.commands.size), 'commands loaded');
+    logger.info(`%%${client.commands.size}%% commands loaded`)
     
     // Load slashCommand
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Loading slash commands...`)
+    logger.info(`Loading slash commands...`)
     const slashCommands = [];
   
     fs.readdirSync('./src/slashCommands/').forEach(async dir => {
@@ -68,10 +68,11 @@ module.exports = async (client) => {
 
                 client.slashCommands.set(slashCommand.name, slashCommand);
             } else {
-                console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Unable to load ${file.replace('.js', '')} slash command from ${dir}`));
+                logger.warn(`Unable to load ${file.replace('.js', '')} slash command from ${dir}`)
             }
         }
     });
+
     (async () => {
         try {
             await rest.put(
@@ -80,32 +81,32 @@ module.exports = async (client) => {
             Routes.applicationCommands(CLIENT_ID),
             { body: slashCommands }
             );
-            console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Slash Commands Registered`)
+            logger.info(`Slash Commands Registered`)
         } catch (error) {
-            console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR ${error}`))
+            logger.warn(`Failed to register slash commands: ${error.stack}`)
         }
     })();
-    console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), chalk.yellow.bold(client.slashCommands.size), 'slash commands loaded')
+    logger.info(`%%${client.slashCommands.size}%% slash commands loaded`)
     
     // Load MongoDB
     mongoose.set('strictQuery', false);
     try {
-        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connecting to MongoDB...`);
+        logger.info(`Connecting to MongoDB...`)
         await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })
         .then(c => {
-             console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `Connected to MongoDB`)
+             logger.info(`Connected to MongoDB`)
         });
     } catch (err) {
-        console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Failed to connect to MongoDB: ${err.msg} ${err.stack}`));
+        logger.error(`Failed to connect to MongoDB: ${err.msg} ${err.stack}`)
         process.exit(1);
     }
 
 	// Load HTTP Server
 	const prettyMilliseconds = require("pretty-ms");
-	console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `HTTP Server starting...`);
+    logger.info("HTTP Server starting...")
 	try {
 	    const port = process.env.PORT || 3000
 	    const server = require('http').createServer((req, res) => {
@@ -115,9 +116,9 @@ module.exports = async (client) => {
 	    });
 	
 	    server.listen(port, "0.0.0.0", () => {
-	        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `HTTP Server running on port ${port}`)
+            logger.info("HTTP Server running on port %%" + port + "%%")
 	    });
     } catch (err) {
-		console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Failed to start HTTP Server: ${err.msg} ${err.stack}`));
+        logger.error("Failed to start HTTP Server: " + err.stack)
 	}
 }

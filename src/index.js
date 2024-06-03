@@ -30,8 +30,7 @@ const client = new Client({
 });
 
 const fs = require("fs");
-const { readline, config } = require("../utils/bot");
-const chalk = require("chalk")
+const { readline, config, logger } = require("../utils/bot");
 require("dotenv").config()
 
 client.commands = new Collection();
@@ -86,11 +85,10 @@ if (process.env.WEBHOOK_URL) {
     })
 }
 
-const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
 process.on("unhandledRejection", (reason, p) => {
-    console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Unhandled Rejection: ${reason.stack}`));
+    logger.error("Unhandled Rejection:", reason.stack)
 });
 
 process.on("uncaughtException", (err, origin) => {
-    console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR Uncaught Exception: ${err.stack}`));
+    logger.error("Uncaught Exception:", err.stack)
 });
