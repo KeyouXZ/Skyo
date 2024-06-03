@@ -4,7 +4,7 @@ const { WebhookClient, EmbedBuilder } = require("discord.js")
 const { userSchema } = require("../database/user");
 const itemSchema = require("../database/itemSchema");
 const serverSchema = require("../database/serverSchema")
-const userItemSchema = require("../database/userItemSchema.js")
+const userItemSchema = require("../database/userItemSchema.js");
 const timestamp = new Date().toLocaleString("en-US", { hour12: false }).replace(",", "");
 
 const database = {
@@ -218,10 +218,26 @@ const config = {
     "currency": "Sc."
 }
 
+const logger = {
+    info: function(...message) {
+        const fixedMessage = message.join(" ").replace(/%%(.*?)%%/g, (_, match) => chalk.yellow.bold(match));
+        return console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), fixedMessage)
+    },
+    error: function(...message) {
+        message = message.join(" ")
+        console.log(chalk.gray(`[${timestamp}]`), chalk.red.bold(`ERROR`), chalk.red(message));
+    },
+    warn: function(...message) {
+        message = message.join(" ")
+        console.log(chalk.gray(`[${timestamp}]`), chalk.yellow.bold(`WARN`), chalk.yellow(message));
+    }
+}
+
 module.exports = {
     cooldown,
     database,
     readline,
     config,
-    util
+    util,
+    logger
 };
