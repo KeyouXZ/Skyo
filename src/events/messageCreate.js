@@ -28,17 +28,13 @@ client.on('messageCreate', async (message) => {
         auth = client.auth.get(message.author.id);
         name = auth.name;
         password = auth.password;
-        data = await database.get(name);
-    }
-    
-    if (isLogin) {
+        data = await database.get(name);    
+
         if (password != data.password) {
             message.author.send("You have been logged out of your account, because your password is incorrect");
             client.auth.delete(message.author.id);
         } 
-    }
     
-    if (isLogin) {
         const lData = await database.get(name);
     
         if (lData && lData.blacklist === 0) {
@@ -59,14 +55,21 @@ client.on('messageCreate', async (message) => {
             }
         }
     }
-    
+
+    // User state
+    const userState = client.state;
+    if (userState.has(message.author.id)) {
+        switch (userState.get(message.author.id)) {
+            case ('logout'):
+                require("./messageCreate/logout.js")(client, message);
+        }
+    }
+
     // Prefix
     const prefix = prefixes.find(p => message.content.startsWith(p));
     if (!prefix) return;
     
     // Args 
-    // Old args
-    // const args = message.content.slice(prefix?.length).trim().split(/ +/g);
     const regex = /"([^"]*)"|\S+/g;
     const args = [];
     let match;
@@ -83,21 +86,30 @@ client.on('messageCreate', async (message) => {
     if (!command?.run) return;
     
     // DM for specific commands
-    if (message.channel.type == 1) { // 1 = DM
-        if (command.name == "login" || command.name == "create") {
-            return command.run(client, message, args, bot)
+    // if (message.channel.type == 1) { // 1 = DM
+    //     if (command.name == "login" || command.name == "create") {
+    //         return command.run(client, message, args, bot)
+    //     } else {
+    //         return message.author.send("You can't use this command here!.")
+    //     }
+    // } else if (message.channel.type == 0) {
+    //     if (command.name == "login" || command.name == "create") {
+    //         return message.reply("You can't use this command here!. Must be in DM")
+    //     }
+    // }
+    if (command.name == "login" || command.name == "create" || command.name == "logout") {
+        if (message.channel.type == 1) { // 1 = DM
+            return command.run(client, message, args, bot);
         } else {
-            return message.author.send("You can't use this command here!.")
+            return message.reply("You can't use this command here!. Must be in DM");
         }
-    } else if (message.channel.type == 0) {
-        if (command.name == "login" || command.name == "create") {
-            return message.reply("You can't use this command here!. Must be in DM")
-        }
+    } else if (message.channel.type == 1) {
+        return message.author.send("You can't use this command here!.");
     }
+    
     
     // Command 2
     if (message.channel.type !== 0) return
-    
     
     // Command that require login
     const loginCommand = ["balance", "daily", "deposit", "pay", "shop", "use", "weekly", "withdraw"];

@@ -1,5 +1,7 @@
 {
     "cSpell.words": [
         "Skyo"
-    ]
+    ],
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }

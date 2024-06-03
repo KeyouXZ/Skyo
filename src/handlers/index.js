@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path")
 const chalk = require('chalk');
 // Required by slash commands
 const { REST, Routes, PermissionsBitField } = require('discord.js');
@@ -121,4 +122,20 @@ module.exports = async (client) => {
     } catch (err) {
         logger.error("Failed to start HTTP Server: " + err.stack)
 	}
+
+    // Load logged users
+    logger.info(`Loading logged users...`)
+    const userFilePath = path.join(__dirname, "..", "..", ".data", "user.json");
+
+    if (!fs.existsSync(userFilePath)) {
+        fs.mkdirSync(path.dirname(userFilePath), { recursive: true });
+        fs.writeFileSync(userFilePath, '{}');
+    }
+
+    const user = fs.readFileSync(userFilePath, "utf-8")
+    for (const key in JSON.parse(user)) {
+        client.auth.set(key, JSON.parse(user)[key]);
+    }
+
+    logger.info(`%%${Object.keys(JSON.parse(user)).length}%% logged users loaded`)
 }

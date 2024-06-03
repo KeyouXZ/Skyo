@@ -1,34 +1,26 @@
 const { userSchema } = require("../../../database/user");
 const { EmbedBuilder, WebhookClient } = require("discord.js");
-const fs = require("fs");
-const chalk = require("chalk");
-const timestamp = new Date().toLocaleString("en-US", { hour12: false }).replace(",", "");
 
 module.exports = {
     name: 'create',
     description: "Create new account",
-    cooldown: 10,
+    cooldown: 60*3600,
+    usage: "<name> <password> [username]",
     run: async (client, message, args, bot) => {
         if (bot.cooldown.has(client, message)) return
         
         // Get last ID
-        // Write if file doesn't exists 
-        const dirPath = "./.skyo"
-        const filePath = dirPath + "/lastid";
-        if (!fs.existsSync(dirPath)) {
-            return message.channel.send("Cannot find directory");
-        }
-        if (!fs.existsSync(filePath)) {
-            fs.writeFileSync(filePath, '0', 'utf-8');
-        }
-        // Read last id
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const lastId = parseInt(fileContent);
+        const data = await bot.database.getAll()
         
+        const values = Object.values(data).map(item => item.ID);
+        const lastId = Math.max(...values) || 1;
+        
+        // Read last id
         let ID = lastId + 1;
-        let name = args[0]?.toLowerCase()
+        let name = args[0]
         let password = args[1]
         let username = args[2] ? args[2] : name
+        name = name?.toLowerCase()
         
         if (!name) {
             return bot.util.tempMessage(message, "Name cannot be empty")
@@ -51,9 +43,6 @@ module.exports = {
             return message.reply("Error cannot create user: " + err)
         }
         
-         // Write new ID
-        fs.writeFileSync(filePath, ID.toString(), 'utf-8');
-        
         // Send new user
         if (process.env.WEBHOOK_URL) {
             const webhook = new WebhookClient({
@@ -67,7 +56,7 @@ module.exports = {
             
             webhook.send({ username: "Skyo Logger", embeds: [newUserEmbed]});
         }
-        console.log(chalk.gray(`[${timestamp}]`), chalk.blue.bold(`INFO`), `User with ID ${ID} has been created`);
+        logger.info(`User with ID %%${ID}%% has been created`)
         
         const embed = new EmbedBuilder()
             .setTitle("User Created")

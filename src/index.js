@@ -40,6 +40,13 @@ client.buttons = new Collection();
 client.prefix = config.prefix;
 client.cooldowns = new Collection();
 client.auth = new Collection();
+client.state = new Collection();
+
+// tmp value
+client['tmp'] = [];
+for (let i = 1; i < 10; i++) {
+    client.tmp[i] = new Collection();
+}
 
 module.exports = client;
 

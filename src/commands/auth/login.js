@@ -1,7 +1,11 @@
+const path = require("path");
+const fs = require("fs")
+
 module.exports = {
     name: 'login',
     description: "Login to an account",
     cooldown: 10,
+    usage: "<name> <password>",
     run: async (client, message, args, bot) => {
         if (bot.cooldown.has(client, message)) return;
 
@@ -10,7 +14,7 @@ module.exports = {
         // Check if already login
         if (client.auth.has(user.id)) return user.send("You are already login")
 
-        const name = args[0]?.toLowerCase();
+        const name = args[0]
         const password = args[1];
         
         // Check user input
@@ -37,6 +41,13 @@ module.exports = {
         
         client.auth.set(user.id, accountFormat);
         await user.send("Successfully logged in as " + name);
+
+        // Save login credentials to file
+        const userFilePath = path.join(__dirname, "..", "..", "..", ".data", "user.json");
+        const data = JSON.parse(fs.readFileSync(userFilePath, "utf-8"))
+        data[user.id] = accountFormat;
+        fs.writeFileSync(userFilePath, JSON.stringify(data, null, 4));
+
         bot.cooldown.set(client, message);
     }
 };
