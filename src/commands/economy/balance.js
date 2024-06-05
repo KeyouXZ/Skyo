@@ -11,54 +11,34 @@ module.exports = {
         if (bot.cooldown.has(client, message)) return;
         
         const member = message.mentions.members.first();
-        const authorId = message.author.id;
-        const authorTag = message.author.tag;
-        
+
+        let userId;
         if (member && !member.user.bot) {
-            const userId = member.user.id;
-            const userName = member.user.username;
-            const userTag = member.user.tag;
-      
-            const data = await bot.database.get(client.auth.get(userId)?.name);
-            
-            if (!data) {
-                return message.reply(`${userName} doesn't have an account`)
-            }
-      
-            const wallet = data.wallet;
-            const bank = data.bank;
-            const total = wallet + bank;
-      
-            const embed = new EmbedBuilder()
-                .setColor('Blue')
-                .setTitle(`${userName}'s Balance`)
-                .addFields({ name: `Wallet`, value: `${bot.config.currency}${wallet.toLocaleString()}`})
-                .addFields({ name: `Bank`, value: `${bot.config.currency}${bank.toLocaleString()}`})
-                .addFields({ name: 'Total', value: `${bot.config.currency}${total.toLocaleString()}`})
-                .setFooter({ text: `Requested by ${userTag}` })
-                .setTimestamp();
-
-            message.channel.send({ embeds: [embed] });
+            userId = member.user.id
         } else if (!member) {
-            const data = await bot.database.get(client.auth.get(message.author.id).name);
+            userId = message.author.id
+        }
 
-            const aWallet = data.wallet;
-            const aBank = data.bank;
-            const aTotal = aWallet + aBank;
+        const data = await bot.database.get(bot.getAuth(userId));
+        if (!data) {
+            return message.reply(`${member.user.username} doesn't have an account`)
+        }
+  
+        const wallet = data.wallet;
+        const bank = data.bank;
+        const total = wallet + bank;
 
-            const aEmbed = new EmbedBuilder()
+        const embed = new EmbedBuilder()
             .setColor('Blue')
-            .setTitle(`${message.author.username}'s Balance`)
-            .addFields({ name: `Wallet`, value: `${bot.config.currency}${aWallet.toLocaleString()}` })
-            .addFields({ name: `Bank`, value: `${bot.config.currency}${aBank.toLocaleString()}` })
-            .addFields({ name: 'Total', value: `${bot.config.currency}${aTotal.toLocaleString()}` })
-            .setFooter({ text: `Requested by ${authorTag}` })
+            .setTitle(`${data.username}'s Balance`)
+            .addFields({ name: `Wallet`, value: `${bot.config.currency}${wallet.toLocaleString()}`})
+            .addFields({ name: `Bank`, value: `${bot.config.currency}${bank.toLocaleString()}`})
+            .addFields({ name: 'Total', value: `${bot.config.currency}${total.toLocaleString()}`})
+            .setFooter({ text: `Requested by ${message.author.tag}` })
             .setTimestamp();
 
-            message.channel.send({ embeds: [aEmbed] });
-        } else if (member.user.bot) { 
-            return message.reply("You can't see the bot's balance") 
-        }
+        message.channel.send({ embeds: [embed] });
+
         // Set cooldown
         return bot.cooldown.set(client, message)
     }

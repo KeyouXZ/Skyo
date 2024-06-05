@@ -11,7 +11,7 @@ module.exports = {
 	    if (bot.cooldown.has(client, message)) return;
     
         const userID = message.author.id;
-        const data = await bot.database.get(userID);
+        const data = await bot.database.get(client.auth.get(userID).name)
 
         const wallet = data.wallet;
         const bank = data.bank;
@@ -25,7 +25,7 @@ module.exports = {
             data.wallet = 0;
     
             // Database
-            await bot.database.save(userID, data);
+            await bot.database.save(bot.getAuth(userID), data);
 
             const embed = new EmbedBuilder()
             .setColor('Green')
@@ -37,7 +37,7 @@ module.exports = {
 
             message.channel.send({ embeds: [embed] });
             // Cooldowns
-            return bot.cooldown.set(client, cooldown);
+            return bot.cooldown.set(client, message);
         }
         
         if (!args[0]) {
@@ -57,7 +57,7 @@ module.exports = {
         data.wallet -= amount;
         data.bank += amount;
 
-        await bot.database.save(userID, data);
+        await bot.database.save(bot.getAuth(userID), data);
 
         const embed0 = new EmbedBuilder()
             .setColor('Green')

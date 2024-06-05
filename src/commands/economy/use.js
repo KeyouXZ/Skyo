@@ -10,9 +10,8 @@ module.exports = {
         if (bot.cooldown.has(client, message)) return;
         
         // Read database
-        const data = await bot.database.get(message.author.id);
+        const data = await bot.database.get(bot.getAuth(message.author.id));
         const itemData = await bot.database.getItemAll();
-        const userItem = await bot.database.getUserItem(message.author.id);
 
         const userId = message.author.id;
         const user = data;
@@ -26,7 +25,7 @@ module.exports = {
             return bot.util.tempMessage(message, "Invalid item ID");
         }
 
-        if (!userItem.item[args[0]] || userItem.item[args[0]] < 1) {
+        if (!data.item[args[0]] || data.item[args[0]] < 1) {
             return bot.util.tempMessage(message, `You don't have this item`);
         }
 
@@ -54,12 +53,11 @@ module.exports = {
             user.isPremium = 1;
             user.premiumDate = moment().toISOString();
             user.premiumDuration = premiumDurations[args[0]];
-            const newItem = userItem.item[args[0]] - 1;
-            await bot.database.save(message.author.id, user);
-            await bot.database.saveUserItem(message.author.id, newItem);
+            user.item = data.item[args[0]] - 1;
+            await bot.database.save(bot.getAuth(message.author.id), user);
 
             return message.channel.send(
-                `${message.author.username}! Premium has been set for ${
+                `${bot.getAuth(message.author.id).username}! Premium has been set for ${
                     premiumDurations[args[0]]
                 } days to your account!`
             );

@@ -9,8 +9,7 @@ module.exports = {
 	    // Check Cooldown
 	    if (bot.cooldown.has(client, message)) return;
 	    
-		const userId = message.author.id;
-		const data = await bot.database.get(userId);
+		const data = await bot.database.get(bot.getAuth(message.author.id));
 
 		const lastWeekly = data.lastWeekly || 0;
 		const wallet = data.wallet;
@@ -35,7 +34,7 @@ module.exports = {
 		} else {
 			data.wallet += 2170;
 			data.lastWeekly = now;
-			await bot.database.save(message.author.id, data);
+			await bot.database.save(bot.getAuth(message.author.id), data);
 			const Claim = new EmbedBuilder()
 				.setColor(`Green`)
 				.setDescription(

@@ -61,6 +61,19 @@ const user = new mongoose.Schema({
     bank: {
         type: Number,
         default: 0
+    },
+
+    // Items
+    item: {
+        type: Object,
+        default: {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+        }
+    },
+    effect: {
+        type: Object
     }
 })
 

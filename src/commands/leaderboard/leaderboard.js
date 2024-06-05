@@ -1,8 +1,4 @@
 const { EmbedBuilder } = require("discord.js");
-const { database, cooldown, util, config } = require("../../../utils/bot")
-// Cooldowns
-const { Collection } = require("discord.js");
-const cooldowns = new Collection();
 
 module.exports = {
     name: "leaderboard",
@@ -34,9 +30,8 @@ module.exports = {
             const leaderboard = [];
 
             for (let i = 0; i < dataWallet.length && i < 10; i++) {
-                const user = await client.users.fetch(dataWallet[i].userID);
                 leaderboard.push(
-                    `\`${i + 1}.\` ${user?.tag ?? "Unknown User"} — **${
+                    `\`${i + 1}.\` ${dataWallet[i].name ?? "Unknown User"} — **${
                         bot.config.currency
                     }${dataWallet[i].wallet.toLocaleString()}**`
                 );
@@ -58,9 +53,8 @@ module.exports = {
             const leaderboard = [];
 
             for (let i = 0; i < dataBank.length && i < 10; i++) {
-                const user = await client.users.fetch(dataBank[i].userID);
                 leaderboard.push(
-                    `\`${i + 1}.\` ${user?.tag ?? "Unknown User"} — **${
+                    `\`${i + 1}.\` ${dataWallet[i].name ?? "Unknown User"} — **${
                         bot.config.currency
                     }${dataBank[i].bank.toLocaleString()}**`
                 );

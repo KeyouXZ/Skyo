@@ -4,7 +4,6 @@ const client = require('../index.js');
 const moment = require('moment');
 const chalk = require('chalk');
 const { cooldown, database, config, util } = require('../../utils/bot');
-const bot = { cooldown, database, config, util };
 
 const prefixes = client.prefix;
 const premium = new Collection();
@@ -13,6 +12,25 @@ const dev = new Collection();
 const timestamp = new Date().toLocaleString('en-US', { hour12: false }).replace(',', '');
 
 client.on('messageCreate', async (message) => {
+
+    function getAuth(id) {
+        const auth = client.auth.get(id);
+        if (!auth) return undefined;
+
+        return new Proxy(auth, {
+            get(target, prop) {
+                if (prop === 'toString') {
+                    return function() {
+                        return target.name;
+                    };
+                }
+                return target[prop];
+            }
+        });
+    }
+
+    const bot = { cooldown, database, config, util, getAuth};
+
     // Levels
     
     if (message.author.bot) return;

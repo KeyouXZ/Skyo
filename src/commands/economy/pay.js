@@ -14,7 +14,7 @@ module.exports = {
         const userID = message.author.id;
         // Cooldowns
         if (bot.cooldown.has(client, message)) return;
-        const data = await bot.database.get(userID);
+        const data = await bot.database.get(bot.getAuth(userID))
 
         const target = message.mentions.members.first();
         if (!target) {
@@ -26,11 +26,12 @@ module.exports = {
                 message,
                 "You can't give money to yourself"
             );
-        } else if (target.user.bot) {
-            return bot.util.tempMessage(message, "You can't give money to bot");
         }
 
-        const targetData = await bot.database.get(target.id);
+        const targetData = await bot.database.get(bot.getAuth(target.user.id))
+        if (!targetData) {
+            return bot.util.tempMessage(message, target.user.username + " haven't account!")
+        }
 
         const wallet = data.wallet;
         const tWallet = targetData.wallet;
@@ -133,9 +134,9 @@ module.exports = {
                 data.wallet -= amount;
                 targetData.wallet += total;
                 // Database
-                await bot.database.save(message.author.id, data);
+                await bot.database.save(bot.getAuth(userID), data);
                 // Database
-                await bot.database.save(target.id, targetData);
+                await bot.database.save(bot.getAuth(target.user.id), targetData);
                 try {
                     confirm.setDisabled(true);
                     cancel.setDisabled(true);

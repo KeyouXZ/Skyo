@@ -8,10 +8,8 @@ module.exports = {
         // Check cooldown
         if (bot.cooldown.has(client, message)) return;
         
-        const auth = client.auth.get(message.author.id)
-        
         const userId = message.author.id;
-        const data = await bot.database.get(auth.name);
+        const data = await bot.database.get(bot.getAuth(userId));
 
         const lastDaily = data.lastDaily || 0;
         const wallet = data.wallet;
@@ -45,7 +43,7 @@ module.exports = {
             data.wallet += dailyAmount + additionalAmount;
             data.lastDaily = now;
             // Update data
-            await bot.database.save(auth.name, data)
+            await bot.database.save(bot.getAuth(userId), data)
 
             if (data.isPremium == 1) {
                 messageContent = `You received ${bot.config.currency}${dailyAmount} + ${bot.config.currency}${additionalAmount} from your daily reward.`;

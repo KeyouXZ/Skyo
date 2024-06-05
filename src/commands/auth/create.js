@@ -56,7 +56,7 @@ module.exports = {
             
             webhook.send({ username: "Skyo Logger", embeds: [newUserEmbed]});
         }
-        logger.info(`User with ID %%${ID}%% has been created`)
+        bot.logger.info(`User with ID %%${ID}%% has been created`)
         
         const embed = new EmbedBuilder()
             .setTitle("User Created")
