@@ -16,7 +16,7 @@
     "@google/generative-ai": "^0.12.0",
     "axios": "^1.4.0",
     "chalk": "^4.1.2",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.15.3",
     "dotenv": "^16.3.1",
     "memes-js": "^1.0.8",
     "moment": "^2.29.4",
