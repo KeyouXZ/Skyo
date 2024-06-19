@@ -7,7 +7,7 @@ module.exports = {
     cooldown: 60*3600,
     usage: "<name> <password> [username]",
     run: async (client, message, args, bot) => {
-        if (bot.cooldown.has(client, message)) return
+        if (bot.cooldown.has(client, message)) return;
         
         // Get last ID
         const data = await bot.database.getAll()
@@ -25,7 +25,7 @@ module.exports = {
         if (!name) {
             return bot.util.tempMessage(message, "Name cannot be empty")
         } else if (!password) {
-            return bot.util.tempMessage(message, "Name cannot be empty")
+            return bot.util.tempMessage(message, "Password cannot be empty")
         } else if (name || password) {
             if (await bot.database.get(name)) {
                 return await bot.util.tempMessage(message, "Name already exists")
@@ -64,6 +64,6 @@ module.exports = {
             .setDescription(`**User Information**\n\n**ID**: ${ID}\n**Username**: ${username}\n**Name**: ${name}\n**Password**: || ${password} ||\n\nTo login to this account use:\n\`\`\`${client.prefix[0]} login ${name} ${password}\`\`\``)
         
         await message.channel.send({ embeds: [embed]})
-        return bot.cooldown.set(client, message)
+        return bot.cooldown.set(client, message);
     }
 }

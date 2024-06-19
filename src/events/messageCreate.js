@@ -29,6 +29,7 @@ client.on('messageCreate', async (message) => {
         });
     }
 
+    // Bot
     const bot = { cooldown, database, config, util, getAuth};
 
     // Levels
@@ -52,7 +53,8 @@ client.on('messageCreate', async (message) => {
             message.author.send("You have been logged out of your account, because your password is incorrect");
             client.auth.delete(message.author.id);
         } 
-    
+        
+        // Level
         const lData = await database.get(name);
     
         if (lData && lData.blacklist === 0) {
@@ -103,18 +105,7 @@ client.on('messageCreate', async (message) => {
     if (!command) command = client.commands.get(client.aliases.get(cmd));
     if (!command?.run) return;
     
-    // DM for specific commands
-    // if (message.channel.type == 1) { // 1 = DM
-    //     if (command.name == "login" || command.name == "create") {
-    //         return command.run(client, message, args, bot)
-    //     } else {
-    //         return message.author.send("You can't use this command here!.")
-    //     }
-    // } else if (message.channel.type == 0) {
-    //     if (command.name == "login" || command.name == "create") {
-    //         return message.reply("You can't use this command here!. Must be in DM")
-    //     }
-    // }
+    // DM for specific commands 
     if (command.name == "login" || command.name == "create" || command.name == "logout") {
         if (message.channel.type == 1) { // 1 = DM
             return command.run(client, message, args, bot);
@@ -124,7 +115,6 @@ client.on('messageCreate', async (message) => {
     } else if (message.channel.type == 1) {
         return message.author.send("You can't use this command here!.");
     }
-    
     
     // Command 2
     if (message.channel.type !== 0) return

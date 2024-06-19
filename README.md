@@ -7,12 +7,13 @@ Skyo is a simple economy discord bot written in JavaScript with mongodb as datab
 
 ### Skyo 1.0.0
 - The first version of this bot.
+- Auth commands: create, login, logout.
 - Economy commands: balance, daily, weekly, deposit, withdraw, pay, shop, use.
 - Util commands: avatar, botinfo, cmdhelp, help, invite, ping, premium, serverinfo, userinfo.
-- Moderation commands: welcome, goodbye, reactionrole, purge.
+- Moderation commands: welcome, goodbye, reactionrole, purge, ban, unban.
 - Fun command: meme.
 - Leaderboard commands: leaderboard, localleaderboard.
 - Developer commands: cmd, gtest, wtest.
-- Other commands: port, web.
+- Other commands: port, web, gemini, iplookup.
 - Slashcommand: ping.
 
