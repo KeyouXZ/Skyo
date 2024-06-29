@@ -17,16 +17,7 @@ client.on('messageCreate', async (message) => {
         const auth = client.auth.get(id);
         if (!auth) return undefined;
 
-        return new Proxy(auth, {
-            get(target, prop) {
-                if (prop === 'toString') {
-                    return function() {
-                        return target.name;
-                    };
-                }
-                return target[prop];
-            }
-        });
+        return { ...auth, toString() { return auth.name}}
     }
 
     // Bot

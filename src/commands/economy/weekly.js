@@ -12,7 +12,6 @@ module.exports = {
 		const data = await bot.database.get(bot.getAuth(message.author.id));
 
 		const lastWeekly = data.lastWeekly || 0;
-		const wallet = data.wallet;
 
 		const now = Date.now();
 		const timeDifference = now - lastWeekly;
